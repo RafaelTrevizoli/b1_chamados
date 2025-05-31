@@ -1,33 +1,38 @@
+'use client';
 import React, { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
-export default function AuthProvider({ children }) {
+export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem('usuario');
-    const savedToken = localStorage.getItem('token');
-    if (savedUser && savedToken) {
-      setUsuario(JSON.parse(savedUser));
-      setToken(savedToken);
-    }
-  }, []);
-
-  const login = (user, token) => {
-    localStorage.setItem('usuario', JSON.stringify(user));
-    localStorage.setItem('token', token);
-    setUsuario(user);
-    setToken(token);
+  const login = (userData, jwtToken) => {
+    setUsuario(userData);
+    setToken(jwtToken);
+    localStorage.setItem('token', jwtToken);
+    localStorage.setItem('usuario', JSON.stringify(userData));
   };
 
   const logout = () => {
-    localStorage.clear();
     setUsuario(null);
-    setToken(null);
-    window.location.href = '/';
+    setToken('');
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    navigate('/'); // Redireciona para login após logout
   };
+
+  useEffect(() => {
+    const tokenSalvo = localStorage.getItem('token');
+    const usuarioSalvo = localStorage.getItem('usuario');
+
+    if (tokenSalvo && usuarioSalvo) {
+      setToken(tokenSalvo);
+      setUsuario(JSON.parse(usuarioSalvo));
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ usuario, token, login, logout }}>
