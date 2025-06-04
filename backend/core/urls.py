@@ -13,5 +13,5 @@ router.register(r'comentarios', ComentarioViewSet)
 router.register(r'anexos', AnexoViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),  # ✅ removido 'api/' aqui!
+    path('', include(router.urls)),
 ]

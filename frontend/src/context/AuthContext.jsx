@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useState, useEffect } from 'react';
+import {toast} from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
@@ -21,7 +22,10 @@ export function AuthProvider({ children }) {
     setToken('');
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-    navigate('/'); // Redireciona para login após logout
+
+    toast.error('Você saiu!');
+
+    setTimeout(() => navigate('/'), 0);
   };
 
   useEffect(() => {

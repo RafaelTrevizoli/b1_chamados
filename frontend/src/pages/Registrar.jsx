@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {toast} from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,11 +15,11 @@ export default function Registrar() {
   const registrar = async () => {
     try {
       await axios.post('http://localhost:8001/api/usuarios/', form);
-      alert('Registro realizado!');
+      toast.success('Registro realizado com sucesso!');
       navigate('/');
     } catch (err) {
       console.error(err);
-      alert('Erro ao registrar');
+      toast.error('Erro ao se registrar!');
     }
   };
 

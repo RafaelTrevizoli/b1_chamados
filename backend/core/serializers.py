@@ -30,9 +30,11 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 
 class ComentarioSerializer(serializers.ModelSerializer):
+    usuario_nome = serializers.CharField(source='usuario.nome', read_only=True)
+
     class Meta:
         model = Comentario
-        fields = '__all__'
+        fields = ['id', 'chamado', 'usuario', 'usuario_nome', 'mensagem']
 
 
 class ChamadoSerializer(serializers.ModelSerializer):
