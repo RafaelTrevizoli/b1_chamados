@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import Usuario, Categoria, Chamado, Comentario, Anexo
@@ -31,15 +31,31 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 class ChamadoViewSet(viewsets.ModelViewSet):
     serializer_class = ChamadoSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['titulo', 'descricao']
 
     def get_queryset(self):
         user = self.request.user
-        if user.tipo_usuario == 'cliente':
-            return Chamado.objects.filter(usuario=user)
-        elif user.tipo_usuario == 'tecnico':
-            return Chamado.objects.filter(tecnico=user)
-        return Chamado.objects.none()
+        queryset = Chamado.objects.all()
 
+        # Filtros opcionais
+        status = self.request.query_params.get('status')
+        prioridade = self.request.query_params.get('prioridade')
+        categoria = self.request.query_params.get('categoria')
+
+        if user.tipo_usuario == 'cliente':
+            queryset = queryset.filter(usuario=user)
+        elif user.tipo_usuario == 'tecnico':
+            queryset = queryset.filter(tecnico=user)
+
+        if status:
+            queryset = queryset.filter(status=status)
+        if prioridade:
+            queryset = queryset.filter(prioridade=prioridade)
+        if categoria:
+            queryset = queryset.filter(categoria=categoria)
+
+        return queryset
 
 
 class ComentarioViewSet(viewsets.ModelViewSet):

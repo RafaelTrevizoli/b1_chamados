@@ -4,20 +4,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Django settings for suporte project.
-# https://docs.djangoproject.com/en/5.2/
+# =========================
+# Paths e configurações básicas
+# =========================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 SECRET_KEY = 'django-insecure-dkkqgl!$^vk#_@w*%mz-l^t)pf4@nqd!&u-d=5e9a0y@8i#r6a'
-
 DEBUG = True
-
 ALLOWED_HOSTS = []
 
-# Application definition
+# =========================
+# Aplicativos instalados
+# =========================
 
 INSTALLED_APPS = [
+    # Django padrão
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,18 +26,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Terceiros
     'rest_framework',
     'drf_yasg',
-    'core',
+    'corsheaders',
 
-    'corsheaders',  # <-- adicionado aqui
+    # Apps locais
+    'core',
 ]
+
+# =========================
+# Middleware
+# =========================
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    'corsheaders.middleware.CorsMiddleware',  # <-- adicionado aqui
+    'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -45,9 +52,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTH_USER_MODEL = 'core.Usuario'
+# =========================
+# URLs e WSGI
+# =========================
 
 ROOT_URLCONF = 'suporte.urls'
+WSGI_APPLICATION = 'suporte.wsgi.application'
+
+# =========================
+# Templates
+# =========================
 
 TEMPLATES = [
     {
@@ -64,9 +78,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'suporte.wsgi.application'
-
-# Database
+# =========================
+# Banco de dados
+# =========================
 
 DATABASES = {
     'default': {
@@ -79,7 +93,11 @@ DATABASES = {
     }
 }
 
-# Password validation
+# =========================
+# Autenticação
+# =========================
+
+AUTH_USER_MODEL = 'core.Usuario'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -91,22 +109,37 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
 }
 
-# Internationalization
+# =========================
+# Internacionalização
+# =========================
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# =========================
+# Arquivos estáticos e mídia
+# =========================
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# =========================
+# Configurações de CORS
+# =========================
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+# =========================
+# Outros
+# =========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS configuration
 
-CORS_ALLOW_ALL_ORIGINS = True  # ou defina uma lista com CORS_ALLOWED_ORIGINS
+

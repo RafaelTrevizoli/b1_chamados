@@ -37,8 +37,15 @@ class ComentarioSerializer(serializers.ModelSerializer):
         fields = ['id', 'chamado', 'usuario', 'usuario_nome', 'mensagem']
 
 
+class AnexoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Anexo
+        fields = ['id', 'chamado', 'arquivo']
+
+
 class ChamadoSerializer(serializers.ModelSerializer):
     comentarios = ComentarioSerializer(many=True, read_only=True)
+    anexos = AnexoSerializer(many=True, read_only=True)  # ADICIONE ISSO
 
     class Meta:
         model = Chamado
@@ -51,9 +58,3 @@ class ChamadoSerializer(serializers.ModelSerializer):
         if 'tecnico' in data and data['tecnico'] and data['tecnico'].tipo_usuario != 'tecnico':
             raise serializers.ValidationError("O técnico atribuído deve ter o tipo 'técnico'.")
         return data
-
-
-class AnexoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Anexo
-        fields = '__all__'
